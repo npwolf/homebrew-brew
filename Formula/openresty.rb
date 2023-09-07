@@ -70,7 +70,8 @@ class Openresty < Formula
     args << "--with-http_postgres_module" if build.with? "postgresql"
     args << "--with-http_iconv_module" if build.with? "iconv"
     args << "--with-http_slice_module" if build.with? "slice"
-
+    args << "--add-module=#{HOMEBREW_PREFIX}/share/geoip2-nginx-module"
+    
     system "./configure", *args
 
     # Install
