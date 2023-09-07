@@ -12,7 +12,7 @@ class Openresty < Formula
   option "with-iconv", "Compile with ngx_http_iconv_module"
   option "with-slice", "Compile with ngx_http_slice_module"
 
-  depends_on "geoip2"
+  # depends_on "geoip2"
   depends_on "geoip2-nginx-module"
   depends_on "openresty/brew/openresty-openssl111"
   depends_on "pcre"
