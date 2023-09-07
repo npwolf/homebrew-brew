@@ -55,7 +55,7 @@ class Openresty < Formula
       --with-http_auth_request_module
       --with-http_secure_link_module
       --with-http_random_index_module
-      --with-http_geoip2_module
+      --with-geoip2_nginx_module
       --with-http_gzip_static_module
       --with-http_sub_module
       --with-http_dav_module
