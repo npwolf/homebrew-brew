@@ -36,6 +36,7 @@ class Openresty < Formula
       --http-log-path=#{var}/log/nginx/access.log
       --error-log-path=#{var}/log/nginx/error.log
       --with-cc-opt=#{cc_opt}
+      --with-debug
       --with-ld-opt=#{ld_opt}
       --with-pcre-jit
       --without-http_rds_json_module
