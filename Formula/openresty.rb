@@ -3,18 +3,28 @@ require 'etc'
 class Openresty < Formula
   desc "Scalable Web Platform by Extending NGINX with Lua"
   homepage "https://openresty.org"
-  VERSION = "1.25.3.2".freeze
-  revision 1
-  url "https://openresty.org/download/openresty-#{VERSION}.tar.gz"
-  sha256 "2d564022b06e33b45f7e5cfaf1e5dc571d38d61803af9fa2754dfff353c28d9c"
+  VERSION = "1.27.1.1".freeze
+  revision 2
+
+  stable do
+    url "https://openresty.org/download/openresty-#{VERSION}.tar.gz"
+    sha256 "79b071e27bdc143d5f401d0dbf504de4420070d867538c5edc2546d0351fd5c0"
+
+    patch do
+      url "https://raw.githubusercontent.com/openresty/openresty/refs/heads/master/patches/LuaJIT2-20241104.patch"
+      sha256 "5e1f56e32f481cd42c73612af7b6e4a06ee5a6f1f711553a76fb505ca2dfebeb"
+    end
+  end
 
   option "with-postgresql", "Compile with ngx_http_postgres_module"
   option "with-iconv", "Compile with ngx_http_iconv_module"
   option "with-slice", "Compile with ngx_http_slice_module"
 
   depends_on "openresty/brew/geoip2-nginx-module"
-  depends_on "openresty/brew/openresty-openssl111"
-  depends_on "pcre"
+  depends_on "libmaxminddb"
+  depends_on "openresty/brew/openresty-openssl3"
+  depends_on "pcre2"
+
   depends_on "postgresql" => :optional
 
   skip_clean "site"
@@ -24,8 +34,8 @@ class Openresty < Formula
 
   def install
     # Configure
-    cc_opt = "-I#{HOMEBREW_PREFIX}/include -I#{Formula["pcre"].opt_include} -I#{Formula["openresty/brew/openresty-openssl111"].opt_include}"
-    ld_opt = "-L#{HOMEBREW_PREFIX}/lib -L#{Formula["pcre"].opt_lib} -L#{Formula["openresty/brew/openresty-openssl111"].opt_lib}"
+    cc_opt = "-I#{HOMEBREW_PREFIX}/include -I#{Formula["pcre2"].opt_include} -I#{Formula["openresty/brew/openresty-openssl3"].opt_include}"
+    ld_opt = "-L#{HOMEBREW_PREFIX}/lib -L#{Formula["pcre2"].opt_lib} -L#{Formula["openresty/brew/openresty-openssl3"].opt_lib}"
 
     args = %W[
       -j#{Etc.nprocessors}
@@ -36,7 +46,6 @@ class Openresty < Formula
       --http-log-path=#{var}/log/nginx/access.log
       --error-log-path=#{var}/log/nginx/error.log
       --with-cc-opt=#{cc_opt}
-      --with-debug
       --with-ld-opt=#{ld_opt}
       --with-pcre-jit
       --without-http_rds_json_module
@@ -63,6 +72,7 @@ class Openresty < Formula
       --with-http_mp4_module
       --with-http_gunzip_module
       --with-threads
+      --with-compat
       --with-luajit-xcflags=-DLUAJIT_NUMMODE=2\ -DLUAJIT_ENABLE_LUA52COMPAT\ -fno-stack-check
     ]
 
